@@ -1,53 +1,34 @@
-// const mongoclient=require ('mongodb').MongoClient;
-// const Objectid=require ('mongodb').ObjectID;
+// const MongoClient = require('mongodb').MongoClient;
+const {MongoClient, ObjectID} = require('mongodb');
 
-const {MongoClient,ObjectID}=require('mongodb');
+MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
+  if (err) {
+    return console.log('Unable to connect to MongoDB server');
+  }
+  console.log('Connected to MongoDB server');
 
-//console.log(new ObjectID());
+  // deleteMany
+  // db.collection('Todos').deleteMany({text: 'Eat lunch'}).then((result) => {
+  //   console.log(result);
+  // });
 
-// var user={name:'Indrajeet Mishra',collage:'KIIT'};
+  // deleteOne
+  // db.collection('Todos').deleteOne({text: 'Eat lunch'}).then((result) => {
+  //   console.log(result);
+  // });
 
-// var {collage}=user;
-// console.log(collage);
+  // findOneAndDelete
+  // db.collection('Todos').findOneAndDelete({completed: false}).then((result) => {
+  //   console.log(result);
+  // });
 
-MongoClient.connect('mongodb://127.0.0.1:27017/NoteToDoApp',(err,client)=>{
+  // db.collection('Users').deleteMany({name: 'Andrew'});
 
+  db.collection('Users').findOneAndDelete({
+    _id: new ObjectID("57ac8d47878a299e5dc21bc8")
+  }).then((results) => {
+    console.log(JSON.stringify(results, undefined, 2));
+  });
 
-if(err)
-{
-    return console.log('Cannot connect to the MongoDB Server');
-}
-
-console.log('Connection successfull');
-
-//---------------Delete one data---------------------
-
-// const db=client.db('NoteToDoApp');
-
-// db.collection('todos').deleteOne({_id:new ObjectID("5af98c35e29423db43726beb")}).then((result)=>{
-
-// console.log('data has been deleted successfully');
-// //console.log(`deleted data is ${JSON.stringify(result.ops)}`);
-
-
-// },(err)=>{console.log('Data doesnt deleted some error occured')}).catch(err=>{console.log(`error occured ${err}`)});
-
-
-
-//----------------delete single data-------------------------------
-
-
-//const db=client.db('NoteToDoApp');
-
-//db.collection('todos').findOneAndDelete({text:"something to do"}).then((result)=>console.log(result));
-
-
-//--------------------------delete matching data----------------
-
-
-const db=client.db('NoteToDoApp');
-
-db.collection('todos').deleteMany({text:"something to do"}).then(result=>console.log(result));
-
-// client.close();
- });
+  // db.close();
+});

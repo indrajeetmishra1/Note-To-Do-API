@@ -1,32 +1,38 @@
-// const mongoclient=require ('mongodb').MongoClient;
-// const Objectid=require ('mongodb').ObjectID;
+// const MongoClient = require('mongodb').MongoClient;
+const {MongoClient, ObjectID} = require('mongodb');
 
-const {MongoClient,ObjectID}=require('mongodb');
+MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
+  if (err) {
+    return console.log('Unable to connect to MongoDB server');
+  }
+  console.log('Connected to MongoDB server');
 
-//console.log(new ObjectID());
+  // db.collection('Todos').findOneAndUpdate({
+  //   _id: new ObjectID('57bc4b15b3b6a3801d8c47a2')
+  // }, {
+  //   $set: {
+  //     completed: true
+  //   }
+  // }, {
+  //   returnOriginal: false
+  // }).then((result) => {
+  //   console.log(result);
+  // });
 
-// var user={name:'Indrajeet Mishra',collage:'KIIT'};
+  db.collection('Users').findOneAndUpdate({
+    _id: new ObjectID('57abbcf4fd13a094e481cf2c')
+  }, {
+    $set: {
+      name: 'Andrew'
+    },
+    $inc: {
+      age: 1
+    }
+  }, {
+    returnOriginal: false
+  }).then((result) => {
+    console.log(result);
+  });
 
-// var {collage}=user;
-// console.log(collage);
-
-MongoClient.connect('mongodb://127.0.0.1:27017/NoteToDoApp',(err,client)=>{
-
-
-if(err)
-{
-    return console.log('Cannot connect to the MongoDB Server');
-}
-
-console.log('Connection successfull');
-
-//---------------Update one data---------------------
-
-const db=client.db('NoteToDoApp');
-
-//db.collection('todos').update({_id:new ObjectID('5af993e3e29423db43726dae')},{text:"Hey i am updated"}).then(result=>console.log(result));
-
-db.collection('todos').findOneAndUpdate({_id:new ObjectID('5af993e3e29423db43726dae')},{$set:{text:"Hey i am updated once again to check incrimetal data"},$inc:{age:30}},{returnOriginal:false}).then(result=>console.log(result));
-
-// client.close();
- });
+  // db.close();
+});

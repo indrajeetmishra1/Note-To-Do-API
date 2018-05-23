@@ -1,40 +1,35 @@
-// const mongoclient=require ('mongodb').MongoClient;
-// const Objectid=require ('mongodb').ObjectID;
+// const MongoClient = require('mongodb').MongoClient;
+const {MongoClient, ObjectID} = require('mongodb');
 
-const {MongoClient,ObjectID}=require('mongodb');
+MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
+  if (err) {
+    return console.log('Unable to connect to MongoDB server');
+  }
+  console.log('Connected to MongoDB server');
 
-//console.log(new ObjectID());
+  // db.collection('Todos').insertOne({
+  //   text: 'Something to do',
+  //   completed: false
+  // }, (err, result) => {
+  //   if (err) {
+  //     return console.log('Unable to insert todo', err);
+  //   }
+  //
+  //   console.log(JSON.stringify(result.ops, undefined, 2));
+  // });
 
-// var user={name:'Indrajeet Mishra',collage:'KIIT'};
+  // Insert new doc into Users (name, age, location)
+  // db.collection('Users').insertOne({
+  //   name: 'Andrew',
+  //   age: 25,
+  //   location: 'Philadelphia'
+  // }, (err, result) => {
+  //   if (err) {
+  //     return console.log('Unable to insert user', err);
+  //   }
+  //
+  //   console.log(result.ops[0]._id.getTimestamp());
+  // });
 
-// var {collage}=user;
-// console.log(collage);
-
-MongoClient.connect('mongodb://127.0.0.1:27017/NoteToDoApp',(err,client)=>{
-
-
-if(err)
-{
-    return console.log('Cannot connect to the MongoDB Server');
-}
-
-console.log('Connection successfull');
-
-//------------------------ data insertion -----------------------------
-var db=client.db('NoteToDoApp');
-
-db.collection('todos').insertOne({text:'something to do',completed:false},(err,result)=>{
-
-if(err)
-{
-    return console.log("Data not inserted successfully");
-}
-
-console.log(JSON.stringify(result.ops[0]._id.getTimestamp()));
-
-console.log(`data inserted successfully with the following result : ${JSON.stringify(result.ops)}`);
-
+  db.close();
 });
-
-// client.close();
- });

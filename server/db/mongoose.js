@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
- var uri='mongodb://localhost:27017/todos';
+ var uri=process.env.MONGODB_URI;
 
 mongoose.connect(uri, {
   keepAlive: true,
