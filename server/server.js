@@ -5,6 +5,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var {ObjectID} = require('mongodb');
 const _=require('lodash');
+const bcrypt=require('bcrypt');
+
 
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
@@ -116,7 +118,7 @@ app.post('/user',(req,res)=>{
   var body=_.pick(req.body,['Email','Password']);
   
   var user=new User(body);
-  //console.log(user);
+  console.log(user);
 
   user.save().then((user)=>
        {
@@ -132,12 +134,49 @@ app.post('/user',(req,res)=>{
 
 app.get('/user/me',authentication,(req,res)=>{
 
-res.status(400).send(req.user);
+res.status(200).send(req.user);
 
 });
 
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);
+});
+
+app.post('/user/login',(req,res)=>{
+
+var body=_.pick(req.body,['Email','Password']);
+
+User.findbyEmail(body.Email,body.Password).then((user)=>{
+
+user.GenerateAuthToken().then((token)=>{
+
+  if(token)
+  {
+    res.header('x-auth',token).send({user:user,Message:"You have logged in successfully"});
+    
+  }
+  });
+}).catch((err)=>{res.status(401).send({message:'Please verify your email id and password'})});
+
+
+});
+
+app.delete('/user/logout',authentication,(req,res)=>{
+
+req.user.deleteToken(req.token).then((result)=>{
+
+  console.log(result);
+if (result)
+{
+  res.status(200).send({Message:'Token removed successfully'});
+}
+else{
+  res.status(400).send({Message:'Unable to loggedout'});
+}
+
+}).catch((err)=>{res.status(400).send({Message:'Unable to loggedout',error:err});});
+
+
 });
 
 module.exports = {app};
